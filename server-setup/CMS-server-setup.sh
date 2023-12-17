@@ -9,6 +9,7 @@ curl -L https://github.com/docker/compose/releases/download/1.25.4/docker-compos
 chmod +x /usr/local/bin/docker-compose
 
 cd WordPressCMS
+cd docker
 sed -i "s/<DB-Host>/$1/g" docker-compose.yml
 sed -i "s/<DB-User>/root/g" docker-compose.yml
 sed -i "s/<DB-Password>/$2/g" docker-compose.yml

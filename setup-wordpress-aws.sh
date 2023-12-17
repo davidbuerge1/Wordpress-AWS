@@ -12,8 +12,9 @@ packages:
   - mariadb-server
   - git
 runcmd:
-  - git clone <github-link> setup
+  - git clone "https://github.com/davidbuerge1/Wordpress-AWS.git" setup
   - cd setup
+  - chmod +x
   - bash DB-server-setup.sh $password
 END
 
@@ -22,8 +23,8 @@ aws ec2 create-security-group --group-name WordPress-net-Intern --description "I
 aws ec2 create-security-group --group-name WordPress-net-Extern --description "Externes-Netzwerk-fuer-WordPressCMS"
 aws ec2 run-instances --image-id ami-08c40ec9ead489470 --count 1 --instance-type t2.micro --key-name WordPress-AWS-Key --security-groups WordPress-net-Intern --iam-instance-profile Name=LabInstanceProfile --user-data file://init.yaml --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=WordPressDB}]'
 
-WPDB-InstanceId=$(aws ec2 describe-instances --query 'Reservations[0].Instances[0].InstanceId' --output text --filters "Name=tag:Name,Values=WordPressDB")
-WPDB-PrivateIpAddress-ip=$(aws ec2 describe-instances --query 'Reservations[0].Instances[0].PrivateIpAddress' --output text --filters "Name=tag:Name,Values=WordPressDB")
+WPDBInstanceId=$(aws ec2 describe-instances --query 'Reservations[0].Instances[0].InstanceId' --output text --filters "Name=tag:Name,Values=WordPressDB")
+WPDBPrivateIpAddress-ip=$(aws ec2 describe-instances --query 'Reservations[0].Instances[0].PrivateIpAddress' --output text --filters "Name=tag:Name,Values=WordPressDB")
 
 SecurityGroupId=$(aws ec2 describe-security-groups --group-names 'WordPress-net-Extern' --query 'SecurityGroups[0].GroupId' --output text)
 
@@ -46,9 +47,10 @@ packages:
   - cron
   - snapd
 runcmd:
-  - git clone <GIT-link> WordPressCMS
-  - cd setup
-  - bash CMS-server-setup.sh $WPDB-PrivateIpAddress-ip $password WordPressDB
+  - git clone "https://github.com/davidbuerge1/Wordpress-AWS.git" WordPressCMS
+  - cd WordPressCMS 
+  - chmod +x
+  - bash CMS-server-setup.sh $WPDBPrivateIpAddress-ip $password WordPressDB
 END
 
 aws ec2 run-instances --image-id ami-08c40ec9ead489470 --count 1 --instance-type t2.micro --key-name WordPress-AWS-Key --security-groups WordPress-net-Extern --iam-instance-profile Name=LabInstanceProfile --user-data file://init.yaml --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=WordPressCMS}]'
