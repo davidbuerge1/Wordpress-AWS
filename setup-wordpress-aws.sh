@@ -14,7 +14,7 @@ packages:
 runcmd:
   - git clone "https://github.com/davidbuerge1/Wordpress-AWS.git" setup
   - cd setup
-  - chmod +x
+  - chmod +x setup-wordpress-aws.sh
   - bash DB-server-setup.sh $password
 END
 
@@ -48,8 +48,8 @@ packages:
   - snapd
 runcmd:
   - git clone "https://github.com/davidbuerge1/Wordpress-AWS.git" WordPressCMS
-  - cd WordPressCMS 
-  - chmod +x
+  - cd WordPressCMS/server-setup 
+  - chmod +x setup-wordpress-aws.sh
   - bash CMS-server-setup.sh $WPDBPrivateIpAddress-ip $password WordPressDB
 END
 
